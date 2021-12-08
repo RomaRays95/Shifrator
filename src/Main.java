@@ -8,36 +8,42 @@ public class Main {
             System.out.println(key[i][1]);
         }
 
+        label:
         while (true){
             String s = scanAction();
-            if (s.equals("f")) break;
-            else if (s.equals("c")){
+            switch (s) {
+                case "f":
+                    break label;
+                case "c": {
 //                Кодируем
-                String text = scanText();
-                StringBuilder code = new StringBuilder("");
-                System.out.println("Шифруемый текст: " + text.toString());
-                for (int i = 0; i < text.length(); i++) {
-                    code.append(coding(text.substring(i, i+1), key));
+                    String text = scanText();
+                    StringBuilder code = new StringBuilder();
+                    System.out.println("Шифруемый текст: " + text);
+                    for (int i = 0; i < text.length(); i++) {
+                        code.append(coding(text.substring(i, i + 1), key));
+                    }
+                    System.out.println(code);
+                    break;
                 }
-                System.out.println(code.toString());
-            }
-            else if (s.equals("d")){
+                case "d": {
 //                Расшифровка
-                String text = scanText();
-                StringBuilder code = new StringBuilder("");
-                System.out.println("Дешифруемый текст: " + text.toString());
-                for (int i = 0; i < text.length(); i += 2) {
-                    code.append(decoding(text.substring(i, i+2), key));
+                    String text = scanText();
+                    StringBuilder code = new StringBuilder();
+                    System.out.println("Дешифруемый текст: " + text);
+                    for (int i = 0; i < text.length(); i += 2) {
+                        code.append(decoding(text.substring(i, i + 2), key));
+                    }
+                    System.out.println(code);
+                    break;
                 }
-                System.out.println(code.toString());
             }
         }
     }
 
     private static String coding(String s, String[][] key){
-        for (int i = 0; i < key.length; i++) {
-            if (s.equalsIgnoreCase(key[i][0])){
-                return key[i][1];
+        for (String[] strings : key) {
+            if (s.equalsIgnoreCase(strings[0])) {
+                return strings[1];
             }
         }
         return "00";
@@ -51,12 +57,12 @@ public class Main {
         key[3][0] = "?";
         key[4][0] = " ";
         int j = 5;
-        for (int i = 0; i < 32; i++) {
-            key[j][0] = "" + (char)(i+1072);
-            j++;
-        }
         for (int i = 0; i < 26; i++) {
             key[j][0] = "" + (char)(i+97);
+            j++;
+        }
+        for (int i = 0; i < 32; i++) {
+            key[j][0] = "" + (char)(i+1072);
             j++;
         }
         for (int i = 0; i < 10; i++) {
@@ -76,9 +82,9 @@ public class Main {
 
 
     private static String decoding(String s, String[][] key){
-        for (int i = 0; i < key.length; i++) {
-            if (s.equalsIgnoreCase(key[i][1])){
-                return key[i][0];
+        for (String[] strings : key) {
+            if (s.equalsIgnoreCase(strings[1])) {
+                return strings[0];
             }
         }
         return "0";
