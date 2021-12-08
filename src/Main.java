@@ -3,10 +3,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        String[][] key = createKey();
-        for (int i = 0; i < 77; i++) {
-            System.out.println(key[i][1]);
-        }
+        int keyPass = keyOfCode();
+        String[][] key = createKey(keyPass);
+//        for (int i = 0; i < 77; i++) {
+//            System.out.println(key[i][1]);
+//        }
+
 
         label:
         while (true){
@@ -18,10 +20,10 @@ public class Main {
 //                Кодируем
                     String text = scanText();
                     StringBuilder code = new StringBuilder();
-                    System.out.println("Шифруемый текст: " + text);
                     for (int i = 0; i < text.length(); i++) {
                         code.append(coding(text.substring(i, i + 1), key));
                     }
+                    System.out.println("Результат:");
                     System.out.println(code);
                     break;
                 }
@@ -29,10 +31,10 @@ public class Main {
 //                Расшифровка
                     String text = scanText();
                     StringBuilder code = new StringBuilder();
-                    System.out.println("Дешифруемый текст: " + text);
                     for (int i = 0; i < text.length(); i += 2) {
                         code.append(decoding(text.substring(i, i + 2), key));
                     }
+                    System.out.println("Результат:");
                     System.out.println(code);
                     break;
                 }
@@ -49,8 +51,8 @@ public class Main {
         return "00";
     }
 
-    private static String[][] createKey(){
-        String[][] key = new String[77][2];
+    private static String[][] createKey(int keyPass){
+        String[][] key = new String[77][4];
         key[0][0] = ")";
         key[1][0] = ".";
         key[2][0] = ",";
@@ -73,11 +75,45 @@ public class Main {
         key[75][0] = "!";
         key[73][0] = "-";
         key[76][0] = "(";
-        Random rand = new Random(51);
+        Random rand = new Random(keyPass);
         for (int i = 0; i < key.length; i++) {
-            key[i][1] = key[rand.nextInt(26) + 4][0] + key[rand.nextInt(26) + 4][0];
+            do key[i][1] = key[rand.nextInt(26) + 4][0] + key[rand.nextInt(26) + 4][0];
+            while (noRepeatCurrentColumn(i, 1, key[i][1], key)
+            );
+        }
+        for (int i = 0; i < key.length; i++) {
+            do key[i][2] = key[rand.nextInt(26) + 4][0] + key[rand.nextInt(26) + 4][0];
+            while (noRepeatCurrentColumn(i, 2, key[i][2], key) && noRepeatFullColumn(1, key[i][2], key)
+            );
+        }
+        for (int i = 0; i < key.length; i++) {
+            do key[i][3] = key[rand.nextInt(26) + 4][0] + key[rand.nextInt(26) + 4][0];
+            while (noRepeatCurrentColumn(i, 3, key[i][3], key) && noRepeatFullColumn(1, key[i][3], key)
+            && noRepeatFullColumn(2, key[i][3], key));
         }
         return  key;
+    }
+
+    private static boolean noRepeatCurrentColumn(int i, int column, String code, String[][] key){
+        boolean result = false;
+        for (int j = 0; j < i; j++) {
+            if (code.equals(key[j][column])) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private static boolean noRepeatFullColumn(int column, String code, String[][] key){
+        boolean result = false;
+        for (String[] strings : key) {
+            if (code.equals(strings[column])) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
 
@@ -100,6 +136,12 @@ public class Main {
         System.out.println("Введите текст");
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
+    }
+
+    private static int keyOfCode(){
+        System.out.println("Введите ключ шифрования");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
     }
 }
 
