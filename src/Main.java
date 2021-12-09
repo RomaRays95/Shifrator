@@ -5,9 +5,9 @@ public class Main {
     public static void main(String[] args) {
         int keyPass = keyOfCode();
         String[][] key = createKey(keyPass);
-//        for (int i = 0; i < 77; i++) {
-//            System.out.println(key[i][1]);
-//        }
+        for (int i = 0; i < 77; i++) {
+            System.out.println(key[i][2]);
+        }
 
 
         label:
@@ -45,7 +45,8 @@ public class Main {
     private static String coding(String s, String[][] key){
         for (String[] strings : key) {
             if (s.equalsIgnoreCase(strings[0])) {
-                return strings[1];
+                Random random = new Random();
+                return strings[random.nextInt(3) + 1];
             }
         }
         return "00";
@@ -77,19 +78,19 @@ public class Main {
         key[76][0] = "(";
         Random rand = new Random(keyPass);
         for (int i = 0; i < key.length; i++) {
-            do key[i][1] = key[rand.nextInt(26) + 4][0] + key[rand.nextInt(26) + 4][0];
+            do key[i][1] = key[rand.nextInt(26) + 5][0] + key[rand.nextInt(26) + 5][0];
             while (noRepeatCurrentColumn(i, 1, key[i][1], key)
             );
         }
         for (int i = 0; i < key.length; i++) {
-            do key[i][2] = key[rand.nextInt(26) + 4][0] + key[rand.nextInt(26) + 4][0];
-            while (noRepeatCurrentColumn(i, 2, key[i][2], key) && noRepeatFullColumn(1, key[i][2], key)
+            do key[i][2] = key[rand.nextInt(26) + 5][0] + key[rand.nextInt(26) + 5][0];
+            while (noRepeatCurrentColumn(i, 2, key[i][2], key) || noRepeatFullColumn(1, key[i][2], key)
             );
         }
         for (int i = 0; i < key.length; i++) {
-            do key[i][3] = key[rand.nextInt(26) + 4][0] + key[rand.nextInt(26) + 4][0];
-            while (noRepeatCurrentColumn(i, 3, key[i][3], key) && noRepeatFullColumn(1, key[i][3], key)
-            && noRepeatFullColumn(2, key[i][3], key));
+            do key[i][3] = key[rand.nextInt(26) + 5][0] + key[rand.nextInt(26) + 5][0];
+            while (noRepeatCurrentColumn(i, 3, key[i][3], key) || noRepeatFullColumn(1, key[i][3], key)
+            || noRepeatFullColumn(2, key[i][3], key));
         }
         return  key;
     }
@@ -119,7 +120,7 @@ public class Main {
 
     private static String decoding(String s, String[][] key){
         for (String[] strings : key) {
-            if (s.equalsIgnoreCase(strings[1])) {
+            if (s.equalsIgnoreCase(strings[1]) || s.equalsIgnoreCase(strings[2]) || s.equalsIgnoreCase(strings[3])) {
                 return strings[0];
             }
         }
@@ -140,8 +141,12 @@ public class Main {
 
     private static int keyOfCode(){
         System.out.println("Введите ключ шифрования");
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextInt();
+        Scanner sc = new Scanner(System.in);
+        while (!sc.hasNextInt()) {
+            System.out.println("Ключ шифрования состоит из цифр. Повторите");
+            sc.nextLine();
+        }
+        return sc.nextInt();
     }
 }
 
