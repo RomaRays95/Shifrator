@@ -7,11 +7,6 @@ public class Main {
     public static void main(String[] args) {
         int keyPass = keyOfCode();
         String[][] key = createKey(keyPass);
-        String[][] key2 = createKey2(keyPass, key);
-        for (int i = 0; i < 42; i++) {
-            System.out.println(key2[i][1]);
-        }
-
 
         label:
         while (true){
@@ -99,25 +94,6 @@ public class Main {
         }
         return  key;
     }
-
-    private static String[][] createKey2 (int keyPass, String[][] key){
-        String[][] key2 = new String[42][2];
-        for (int i = 0; i < 42; i++) {
-            key2[i][0] = key[i + 31][0];
-        }
-        Random rand = new Random(keyPass + 1);
-        for (int i = 0; i < key2.length; i++) {
-            do key2[i][1] = key[rand.nextInt(26) + 5][0] + key[rand.nextInt(26) + 5][0]
-                    + key[rand.nextInt(26) + 5][0];
-            while (noRepeatCurrentColumn(i, 1, key2[i][1], key2)
-            );
-        }
-        return key2;
-    }
-
-//    private static StringBuilder coding2(StringBuilder code){
-//
-//    }
 
     private static boolean noRepeatCurrentColumn(int i, int column, String code, String[][] key){
         boolean result = false;
